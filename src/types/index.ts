@@ -208,6 +208,22 @@ export interface Invitation {
   created_at: string
 }
 
+export interface MemberPermissions {
+  leads: boolean
+  prospects: boolean
+  clients: boolean
+  projets: boolean
+  ressources: boolean
+}
+
+export const DEFAULT_PERMISSIONS: MemberPermissions = {
+  leads: true,
+  prospects: true,
+  clients: true,
+  projets: true,
+  ressources: true,
+}
+
 export interface WorkspaceMember {
   id: string
   owner_id: string
@@ -215,6 +231,7 @@ export interface WorkspaceMember {
   role: string
   created_at: string
   profile?: Profile
+  permissions: MemberPermissions
 }
 
 export interface CALigne {

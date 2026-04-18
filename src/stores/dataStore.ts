@@ -8,6 +8,7 @@ import type {
   Activite,
   Invitation,
   WorkspaceMember,
+  MemberPermissions,
 } from '@/types'
 
 interface DataState {
@@ -54,6 +55,7 @@ interface DataState {
   inviteMember: (email: string) => Promise<{ error: string | null; token?: string; emailError?: string | null }>
   removeMember: (memberId: string) => Promise<{ error: string | null }>
   cancelInvitation: (invitationId: string) => Promise<{ error: string | null }>
+  updateMemberPermissions: (memberId: string, permissions: MemberPermissions) => Promise<{ error: string | null }>
 
   // Chargement global
   fetchAll: () => Promise<void>
@@ -361,6 +363,23 @@ export const useDataStore = create<DataState>()((set, get) => ({
     const { error } = await supabase.from('invitations').delete().eq('id', invitationId)
     if (error) return { error: error.message }
     set((s) => ({ invitations: s.invitations.filter((i) => i.id !== invitationId) }))
+    return { error: null }
+  },
+
+  updateMemberPermissions: async (memberId, permissions) => {
+    const userId = await getUserId()
+    if (!userId) return { error: 'Non authentifié' }
+    const { error } = await supabase
+      .from('workspace_members')
+      .update({ permissions })
+      .eq('owner_id', userId)
+      .eq('member_id', memberId)
+    if (error) return { error: error.message }
+    set((s) => ({
+      members: s.members.map((m) =>
+        m.member_id === memberId && m.owner_id === userId ? { ...m, permissions } : m
+      ),
+    }))
     return { error: null }
   },
 
