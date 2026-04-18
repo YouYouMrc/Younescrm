@@ -1,5 +1,4 @@
 import { useLocation } from 'react-router-dom'
-import { getAvatarUrl } from '@/utils/avatar'
 import { Bell, Sun, Moon, PanelLeft, LayoutDashboard, Target, Crosshair, Briefcase, FolderKanban, Columns2, Link2, TrendingUp, DollarSign, Users, BarChart2, Settings, Mail } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useDataStore } from '@/stores/dataStore'
@@ -87,9 +86,6 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
   const todayStr   = new Date().toISOString().split('T')[0]
   const todayLeads = leads.filter(l => l.prochain_contact?.startsWith(todayStr))
   const notifCount = todayLeads.length
-
-  const firstName = profile?.nom?.split(' ')[0] ?? ''
-  const initials  = profile?.nom?.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) ?? 'U'
 
   const today = new Intl.DateTimeFormat('fr-FR', {
     weekday: 'long', day: 'numeric', month: 'long',
@@ -285,29 +281,6 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
           )}
         </div>
 
-        {/* Divider */}
-        <div style={{ width: 1, height: 20, background: 'var(--border2)', margin: '0 2px', flexShrink: 0 }} />
-
-        {/* User chip */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 7,
-          padding: '4px 10px 4px 4px',
-          borderRadius: 999,
-          border: '1px solid var(--border1)',
-          background: 'var(--surface2)',
-          cursor: 'default', flexShrink: 0,
-        }}>
-          <img
-            src={profile?.avatar ?? getAvatarUrl(profile?.nom ?? profile?.full_name ?? 'user')}
-            alt={profile?.nom ?? 'avatar'}
-            style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', background: 'var(--surface2)' }}
-          />
-          {firstName && (
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text1)', whiteSpace: 'nowrap' }}>
-              {firstName}
-            </span>
-          )}
-        </div>
 
       </div>
     </header>
