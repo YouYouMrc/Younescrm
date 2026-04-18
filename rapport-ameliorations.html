@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rapport d'améliorations — Younes CRM</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0d0d0d;
+    --surface1: #151515;
+    --surface2: #1c1c1c;
+    --surface3: #242424;
+    --border: #2a2a2a;
+    --text1: #f0ede8;
+    --text2: #b8b3ac;
+    --text3: #6e6a64;
+    --accent: #10b981;
+    --accent-dim: rgba(16,185,129,0.12);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --orange: #f97316;
+    --orange-dim: rgba(249,115,22,0.12);
+    --yellow: #eab308;
+    --yellow-dim: rgba(234,179,8,0.12);
+    --blue: #6db3f2;
+    --blue-dim: rgba(109,179,242,0.12);
+    --purple: #9b8ff2;
+    --purple-dim: rgba(155,143,242,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text1);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 48px 24px;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 52px;
+    gap: 24px;
+  }
+
+  .header-left h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text1);
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .header-left h1 span { color: var(--accent); }
+
+  .header-left p {
+    color: var(--text3);
+    font-size: 13px;
+    max-width: 420px;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 99px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .tag-green { background: var(--accent-dim); color: var(--accent); }
+  .tag-date { background: var(--surface3); color: var(--text3); }
+
+  /* ── STATS HEADER ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 52px;
+  }
+
+  .stat-card {
+    background: var(--surface1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .stat-card .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text1);
+  }
+
+  .stat-card .num.red { color: var(--red); }
+  .stat-card .num.orange { color: var(--orange); }
+  .stat-card .num.yellow { color: var(--yellow); }
+  .stat-card .num.green { color: var(--accent); }
+
+  .stat-card .label {
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text1);
+  }
+
+  .section-header .count {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: var(--surface3);
+    color: var(--text3);
+  }
+
+  /* ── ITEMS ── */
+  .items-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .item {
+    background: var(--surface1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .item:hover { border-color: var(--surface3); }
+
+  .item-priority {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .p-critical { background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.5); }
+  .p-high     { background: var(--orange); }
+  .p-medium   { background: var(--yellow); }
+  .p-low      { background: var(--accent); }
+
+  .item-body { flex: 1; min-width: 0; }
+
+  .item-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text1);
+    margin-bottom: 3px;
+  }
+
+  .item-desc {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.5;
+  }
+
+  .item-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .badge-critical { background: var(--red-dim); color: var(--red); }
+  .badge-high     { background: var(--orange-dim); color: var(--orange); }
+  .badge-medium   { background: var(--yellow-dim); color: var(--yellow); }
+  .badge-low      { background: var(--accent-dim); color: var(--accent); }
+  .badge-blue     { background: var(--blue-dim); color: var(--blue); }
+  .badge-purple   { background: var(--purple-dim); color: var(--purple); }
+
+  /* ── QUICK WINS ── */
+  .wins-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .win-card {
+    background: var(--surface1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .win-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .win-text {
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  .win-text strong {
+    color: var(--text1);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ── ROADMAP ── */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .roadmap-col {
+    background: var(--surface1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .roadmap-col h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .roadmap-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .roadmap-item {
+    font-size: 12px;
+    color: var(--text2);
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--surface2);
+    margin-bottom: 6px;
+    border-left: 2px solid var(--border);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer p { font-size: 12px; color: var(--text3); }
+  .footer strong { color: var(--accent); }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; color: #111; padding: 24px; }
+    .item, .win-card, .stat-card, .roadmap-col { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Pistes d'<span>amélioration</span><br/>Younes CRM</h1>
+      <p>Analyse complète du projet — fonctionnalités manquantes, bugs UX, performances, sécurité et roadmap d'évolution.</p>
+    </div>
+    <div class="header-right">
+      <span class="tag tag-green">v1.0 — Analyse</span>
+      <span class="tag tag-date">Avril 2026</span>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="num red">4</div>
+      <div class="label">Points critiques</div>
+    </div>
+    <div class="stat-card">
+      <div class="num orange">8</div>
+      <div class="label">Priorité haute</div>
+    </div>
+    <div class="stat-card">
+      <div class="num yellow">11</div>
+      <div class="label">Priorité moyenne</div>
+    </div>
+    <div class="stat-card">
+      <div class="num green">10</div>
+      <div class="label">Quick wins</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — CRITIQUE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--red-dim)">🔴</div>
+      <h2>Problèmes critiques</h2>
+      <span class="count">4 items</span>
+    </div>
+    <div class="items-grid">
+      <div class="item">
+        <div class="item-priority p-critical"></div>
+        <div class="item-body">
+          <div class="item-title">Pas de pagination sur la liste des leads</div>
+          <div class="item-desc">Tous les leads sont chargés en une fois. Avec 500+ leads l'app devient lente voire inutilisable. Ajouter une pagination ou du scroll infini avec lazy loading.</div>
+        </div>
+        <span class="item-badge badge-critical">Performance</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-critical"></div>
+        <div class="item-body">
+          <div class="item-title">Clé API Serper stockée en localStorage</div>
+          <div class="item-desc">La clé Serper (Lead Finder) est sauvegardée en clair dans le localStorage du navigateur. Si une faille XSS existe, la clé est volée. À déplacer dans une variable d'environnement ou Supabase Vault.</div>
+        </div>
+        <span class="item-badge badge-critical">Sécurité</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-critical"></div>
+        <div class="item-body">
+          <div class="item-title">Aucune validation de formulaire</div>
+          <div class="item-desc">Les modals (Lead, Client, Projet) ne valident pas les champs. On peut sauvegarder un lead entièrement vide, un email invalide, une URL malformée. Ajouter des règles de validation avec messages d'erreur champ par champ.</div>
+        </div>
+        <span class="item-badge badge-critical">UX / Data</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-critical"></div>
+        <div class="item-body">
+          <div class="item-title">Pas de détection de doublons</div>
+          <div class="item-desc">Le même lead peut être ajouté plusieurs fois sans avertissement. Vérifier l'email ou le nom + entreprise avant la création et alerter l'utilisateur si un doublon est détecté.</div>
+        </div>
+        <span class="item-badge badge-critical">Data quality</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 — HAUTE PRIORITÉ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--orange-dim)">🟠</div>
+      <h2>Priorité haute</h2>
+      <span class="count">8 items</span>
+    </div>
+    <div class="items-grid">
+      <div class="item">
+        <div class="item-priority p-high"></div>
+        <div class="item-body">
+          <div class="item-title">Pipeline Kanban en lecture seule</div>
+          <div class="item-desc">Les cartes du pipeline ne sont pas déplaçables par drag & drop. L'utilisateur doit ouvrir chaque lead pour changer son statut. Implémenter du drag-and-drop (dnd-kit ou react-beautiful-dnd).</div>
+        </div>
+        <span class="item-badge badge-high">Feature</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-high"></div>
+        <div class="item-body">
+          <div class="item-title">Pas d'actions en masse sur les leads</div>
+          <div class="item-desc">Impossible de sélectionner 10 leads et de changer leur statut en une fois. Ajouter des checkboxes, une barre d'actions en masse (changer statut, supprimer, exporter, assigner).</div>
+        </div>
+        <span class="item-badge badge-high">Feature</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-high"></div>
+        <div class="item-body">
+          <div class="item-title">Recherche globale absente</div>
+          <div class="item-desc">Il n'existe pas de barre de recherche unifiée pour trouver un client, lead ou projet depuis n'importe où dans l'app. Ajouter un raccourci ⌘K avec une modale de recherche full-text.</div>
+        </div>
+        <span class="item-badge badge-high">UX</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-high"></div>
+        <div class="item-body">
+          <div class="item-title">Pas de workflow automatisé</div>
+          <div class="item-desc">Quand un lead passe à "Gagné", rien ne se passe automatiquement. Il faudrait : créer le client, proposer de créer un projet, envoyer une notification. Automatiser les transitions d'état clés.</div>
+        </div>
+        <span class="item-badge badge-high">Automation</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-high"></div>
+        <div class="item-body">
+          <div class="item-title">Gestion des rôles d'équipe inexistante</div>
+          <div class="item-desc">Tous les membres ont les mêmes droits. Pas de distinction admin / membre / lecture seule. Ajouter des permissions par rôle, notamment pour la suppression et l'export de données.</div>
+        </div>
+        <span class="item-badge badge-high">Sécurité</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-high"></div>
+        <div class="item-body">
+          <div class="item-title">Dashboard sans comparaison temporelle</div>
+          <div class="item-desc">Les stats du dashboard affichent une valeur fixe sans contexte. Ajouter un comparatif avec le mois précédent (ex: +12% de leads ce mois) et un sélecteur de période.</div>
+        </div>
+        <span class="item-badge badge-high">Analytics</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-high"></div>
+        <div class="item-body">
+          <div class="item-title">Projets sans tâches ni suivi de temps</div>
+          <div class="item-desc">Les projets ont des étapes mais pas de tâches détaillées ni de temps estimé vs réel. Ajouter un sous-système de tâches avec assignation, deadline et avancement.</div>
+        </div>
+        <span class="item-badge badge-high">Feature</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-high"></div>
+        <div class="item-body">
+          <div class="item-title">Pas d'export de données</div>
+          <div class="item-desc">Il est impossible d'exporter ses leads, clients ou projets en CSV / Excel / PDF. Fonctionnalité indispensable pour les rapports commerciaux et les sauvegardes.</div>
+        </div>
+        <span class="item-badge badge-high">Feature</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — PRIORITÉ MOYENNE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--yellow-dim)">🟡</div>
+      <h2>Priorité moyenne</h2>
+      <span class="count">11 items</span>
+    </div>
+    <div class="items-grid">
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Score de lead entièrement manuel</div>
+          <div class="item-desc">Le score (1–10) est saisi à la main. Ajouter un calcul automatique basé sur : le remplissage du profil, l'activité récente, la source, la niche, le statut.</div>
+        </div>
+        <span class="item-badge badge-medium">Intelligence</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Pas de page Rapports / Analytics</div>
+          <div class="item-desc">Aucune page dédiée aux statistiques avancées : taux de conversion par source, taux de clôture, chiffre d'affaires prévisionnel, entonnoir de vente visuel.</div>
+        </div>
+        <span class="item-badge badge-medium">Analytics</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Projets sans drag & drop entre étapes</div>
+          <div class="item-desc">Similaire au Pipeline, le board des projets ne permet pas de déplacer les cards d'une colonne à l'autre visuellement. Interaction essentielle pour une gestion de projet fluide.</div>
+        </div>
+        <span class="item-badge badge-medium">UX</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Navigation clavier et accessibilité insuffisantes</div>
+          <div class="item-desc">Manque de navigation au clavier dans les dropdowns, absence de focus trap dans les modals, pas de labels ARIA sur les boutons icône. Problématique pour les lecteurs d'écran.</div>
+        </div>
+        <span class="item-badge badge-medium">A11y</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Thème sombre / clair non persisté</div>
+          <div class="item-desc">La préférence de thème se perd au rechargement de page. Persister le choix dans localStorage et respecter la préférence système (prefers-color-scheme) par défaut.</div>
+        </div>
+        <span class="item-badge badge-medium">UX</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Bouton IA dans la topbar non fonctionnel</div>
+          <div class="item-desc">Un bouton IA existe dans la barre de navigation avec un "coming soon". L'intégrer avec un assistant IA contextuel (résumer les leads, suggérer des actions, analyser le pipeline).</div>
+        </div>
+        <span class="item-badge badge-purple">IA</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Recherche de leads sans filtres combinés</div>
+          <div class="item-desc">On ne peut pas filtrer simultanément par niche + statut + score + date. Implémenter un système de filtres multi-critères avec sauvegarde de vues personnalisées.</div>
+        </div>
+        <span class="item-badge badge-medium">UX</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Suivi de revenus client manquant</div>
+          <div class="item-desc">Les fiches clients n'ont pas de champ valeur de contrat, date de renouvellement, ni historique des paiements. Ajouter un mini CRM financier par client.</div>
+        </div>
+        <span class="item-badge badge-medium">Feature</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Pas d'état vide (empty states)</div>
+          <div class="item-desc">Quand une section n'a pas de données, il n'y a pas d'illustration ou de message d'invite. Ajouter des empty states engageants avec un CTA (ex: "Ajouter votre premier lead →").</div>
+        </div>
+        <span class="item-badge badge-medium">UX / Polish</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Page Paramètres inexistante</div>
+          <div class="item-desc">Il n'existe pas de page Paramètres dédiée. La gestion du profil est dans une modale. Créer une page /settings avec : profil, notifications, intégrations, clés API, abonnement.</div>
+        </div>
+        <span class="item-badge badge-medium">Navigation</span>
+      </div>
+      <div class="item">
+        <div class="item-priority p-medium"></div>
+        <div class="item-body">
+          <div class="item-title">Fichiers Auth.tsx et Leads.tsx trop volumineux</div>
+          <div class="item-desc">Auth.tsx fait ~45KB et Leads.tsx ~35KB. Ces fichiers sont difficiles à maintenir. Les découper en composants (slides d'onboarding, formulaires, hooks) pour améliorer la lisibilité.</div>
+        </div>
+        <span class="item-badge badge-blue">Code quality</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK WINS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--accent-dim)">⚡</div>
+      <h2>Quick Wins — À faire en premier</h2>
+      <span class="count">Rapide à implémenter</span>
+    </div>
+    <div class="wins-grid">
+      <div class="win-card">
+        <div class="win-num">1</div>
+        <div class="win-text"><strong>Debounce sur les recherches</strong>Évite des re-renders à chaque frappe dans les champs de recherche.</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">2</div>
+        <div class="win-text"><strong>Labels ARIA sur les boutons icône</strong>Chaque bouton sans texte doit avoir un aria-label pour l'accessibilité.</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">3</div>
+        <div class="win-text"><strong>Supprimer les console.log en production</strong>Ils exposent des données internes et ralentissent le navigateur.</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">4</div>
+        <div class="win-text"><strong>Validation email & téléphone</strong>Ajouter un retour visuel immédiat si le format est invalide à la saisie.</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">5</div>
+        <div class="win-text"><strong>Empty states sur toutes les pages</strong>Afficher un message + illustration quand la liste est vide.</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">6</div>
+        <div class="win-text"><strong>Focus trap dans les modals</strong>Le focus ne doit pas sortir d'une modale ouverte (accessibilité clavier).</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">7</div>
+        <div class="win-text"><strong>Persister le thème dans localStorage</strong>Une ligne de code qui évite de re-choisir le thème à chaque session.</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">8</div>
+        <div class="win-text"><strong>Déplacer la clé Serper en .env</strong>Retirer la clé du localStorage, la stocker comme variable d'environnement.</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">9</div>
+        <div class="win-text"><strong>Page 404 personnalisée</strong>Actuellement les routes invalides ne redirigent pas correctement.</div>
+      </div>
+      <div class="win-card">
+        <div class="win-num">10</div>
+        <div class="win-text"><strong>Raison de perte sur les leads "Perdu"</strong>Ajouter un champ optionnel pour comprendre pourquoi un deal a été perdu.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--purple-dim)">🗺️</div>
+      <h2>Roadmap suggérée</h2>
+    </div>
+    <div class="roadmap">
+      <div class="roadmap-col">
+        <h3><span class="roadmap-dot" style="background:var(--red)"></span>Semaine 1–2</h3>
+        <div class="roadmap-item">Validation formulaires</div>
+        <div class="roadmap-item">Détection doublons</div>
+        <div class="roadmap-item">Sécuriser clé Serper</div>
+        <div class="roadmap-item">Quick wins accessibilité</div>
+        <div class="roadmap-item">Empty states</div>
+      </div>
+      <div class="roadmap-col">
+        <h3><span class="roadmap-dot" style="background:var(--orange)"></span>Semaine 3–5</h3>
+        <div class="roadmap-item">Pagination leads</div>
+        <div class="roadmap-item">Drag & drop Pipeline</div>
+        <div class="roadmap-item">Actions en masse</div>
+        <div class="roadmap-item">Export CSV/Excel</div>
+        <div class="roadmap-item">Filtres combinés</div>
+      </div>
+      <div class="roadmap-col">
+        <h3><span class="roadmap-dot" style="background:var(--accent)"></span>Semaine 6–10</h3>
+        <div class="roadmap-item">Page Rapports</div>
+        <div class="roadmap-item">Recherche globale ⌘K</div>
+        <div class="roadmap-item">Tâches dans projets</div>
+        <div class="roadmap-item">Assistant IA intégré</div>
+        <div class="roadmap-item">Page Paramètres</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>Généré pour <strong>Younes CRM</strong> — Avril 2026</p>
+    <p>33 points d'amélioration identifiés · <strong>4 critiques à traiter en priorité</strong></p>
+  </div>
+
+</div>
+</body>
+</html>
