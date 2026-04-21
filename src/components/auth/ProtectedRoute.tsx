@@ -49,5 +49,16 @@ export default function ProtectedRoute({ children, skipOnboardingCheck = false }
     return <Navigate to={from} replace />
   }
 
+  // Session active + onboarding pas encore fait → /onboarding
+  if (
+    session &&
+    !skipOnboardingCheck &&
+    profile &&
+    !profile.branding?.onboardingCompleted &&
+    location.pathname !== '/onboarding'
+  ) {
+    return <Navigate to="/onboarding" replace />
+  }
+
   return <>{children}</>
 }

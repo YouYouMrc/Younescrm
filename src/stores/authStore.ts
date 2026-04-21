@@ -130,7 +130,7 @@ export const useAuthStore = create<AuthState>()(
       signInWithGoogle: async () => {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
-          options: { redirectTo: `${window.location.origin}/dashboard` },
+          options: { redirectTo: `${window.location.origin}/` },
         })
         if (error) return { error: error.message }
         return { error: null }
@@ -139,7 +139,7 @@ export const useAuthStore = create<AuthState>()(
       signInWithApple: async () => {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'apple',
-          options: { redirectTo: `${window.location.origin}/dashboard` },
+          options: { redirectTo: `${window.location.origin}/` },
         })
         if (error) return { error: error.message }
         return { error: null }
